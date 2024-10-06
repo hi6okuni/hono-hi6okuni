@@ -1,7 +1,7 @@
 import readline from 'node:readline/promises'
 
-const clientId = 'daa9e0f8f2da4e7eaa009ff9949e70c0'
-const clientSecret = '4b6d1b156998413296dc4f33bd48996a'
+const clientId = process.env.SPOTIFY_CLIENT_ID
+const clientSecret = process.env.SPOTIFY_CLIENT_SECRET
 const redirectUri = 'http://localhost:8787/callback'
 
 async function getInitailTokens() {
