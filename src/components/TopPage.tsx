@@ -1,5 +1,14 @@
-export const TopPage = () => {
+import { FC } from 'hono/jsx'
+import { RecentlyPlayedResponse } from '../types/Spotify'
+
+type TopPageProps = {
+	currentTrack: any
+}
+
+export const TopPage: FC<TopPageProps> = ({ currentTrack }) => {
 	const year = new Date().getFullYear()
+
+	console.log('currentTrack:', currentTrack)
 
 	return (
 		<div

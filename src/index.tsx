@@ -2,8 +2,16 @@ import { Hono } from 'hono'
 import { jsxRenderer } from 'hono/jsx-renderer'
 import { serveStatic } from 'hono/cloudflare-workers'
 import { TopPage } from './components/TopPage'
+import { scheduled } from './update-spotify-data'
 
-const app = new Hono()
+type Bindings = {
+	SPOTIFY_DATA: KVNamespace
+	SPOTIFY_CLIENT_ID: string
+	SPOTIFY_CLIENT_SECRET: string
+	SPOTIFY_REFRESH_TOKEN: string
+}
+
+const app = new Hono<{ Bindings: Bindings }>()
 
 app.get('/styles/*', serveStatic({ root: './' }))
 app.get('/favicon/*', serveStatic({ root: './' }))
@@ -39,6 +47,14 @@ app.get(
 	),
 )
 
-app.get('/', (c) => c.render(<TopPage />))
+app.get('/', async (c) => {
+	const lastPlayedTrack = JSON.parse(
+		(await c.env.SPOTIFY_DATA.get('last_played_track')) || 'null',
+	)
+	return c.render(<TopPage currentTrack={lastPlayedTrack} />)
+})
 
-export default app
+export default {
+	fetch: app.fetch,
+	scheduled,
+}
