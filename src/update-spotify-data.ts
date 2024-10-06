@@ -1,3 +1,5 @@
+import { PlayHistoryObject, RecentlyPlayedResponse } from './types/Spotify'
+
 type Env = {
 	SPOTIFY_CLIENT_ID: string
 	SPOTIFY_CLIENT_SECRET: string
@@ -45,7 +47,9 @@ async function getSpotifyToken(env: Env): Promise<string> {
 	return data.access_token
 }
 
-async function fetchRecentTrack(token: string): Promise<any> {
+async function fetchRecentTrack(
+	token: string,
+): Promise<PlayHistoryObject | null> {
 	const response = await fetch(
 		'https://api.spotify.com/v1/me/player/recently-played?limit=1',
 		{
@@ -57,6 +61,6 @@ async function fetchRecentTrack(token: string): Promise<any> {
 		throw new Error(`HTTP error! status: ${response.status}`)
 	}
 
-	const data = await response.json()
+	const data = (await response.json()) as RecentlyPlayedResponse
 	return data.items.length > 0 ? data.items[0] : null
 }

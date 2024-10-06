@@ -51,7 +51,7 @@ app.get('/', async (c) => {
 	const lastPlayedTrack = JSON.parse(
 		(await c.env.SPOTIFY_DATA.get('last_played_track')) || 'null',
 	)
-	return c.render(<TopPage currentTrack={lastPlayedTrack} />)
+	return c.render(<TopPage lastPlayedTrack={lastPlayedTrack} />)
 })
 
 export default {

@@ -1,19 +1,17 @@
 import { FC } from 'hono/jsx'
-import { RecentlyPlayedResponse } from '../types/Spotify'
+import { PlayHistoryObject } from '../types/Spotify'
 
 type TopPageProps = {
-	currentTrack: any
+	lastPlayedTrack: PlayHistoryObject
 }
 
-export const TopPage: FC<TopPageProps> = ({ currentTrack }) => {
+export const TopPage: FC<TopPageProps> = ({ lastPlayedTrack }) => {
 	const year = new Date().getFullYear()
-
-	console.log('currentTrack:', currentTrack)
 
 	return (
 		<div
 			x-data='{ play: false, is33rpm: true }'
-			class='bg-zinc-900 h-screen mx-auto flex flex-col justify-center items-center gap-16'
+			class='bg-zinc-900 h-screen mx-auto flex flex-col justify-center items-center gap-16 relative'
 		>
 			<div class='relative bg-indigo-300 text-zinc-900 sm:w-[384px] w-[320px] sm:h-[384px] h-[320px] rounded-full'>
 				<div class='flex flex-col justify-center items-center h-full'>
@@ -168,6 +166,23 @@ export const TopPage: FC<TopPageProps> = ({ currentTrack }) => {
 						RPM: 33 / 45
 					</span>
 				</label>
+			</div>
+
+			<div class='absolute bottom-4 right-4 bg-zinc-800 text-white p-4 rounded-lg shadow-lg max-w-sm'>
+				<h3 class='text-lg font-bold mb-2'>最後に再生した曲</h3>
+				{lastPlayedTrack ? (
+					<>
+						<p class='text-sm mb-1'>曲名: {lastPlayedTrack.track.name}</p>
+						<p class='text-sm mb-1'>
+							アーティスト:{' '}
+							{lastPlayedTrack.track.artists
+								.map((artist) => artist.name)
+								.join(', ')}
+						</p>
+					</>
+				) : (
+					<p class='text-sm'>再生履歴がありません</p>
+				)}
 			</div>
 		</div>
 	)
