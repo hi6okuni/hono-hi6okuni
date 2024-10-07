@@ -9,6 +9,7 @@ type Bindings = {
 	SPOTIFY_CLIENT_ID: string
 	SPOTIFY_CLIENT_SECRET: string
 	SPOTIFY_REFRESH_TOKEN: string
+	SHOW_SPOTIFY: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -51,7 +52,11 @@ app.get('/', async (c) => {
 	const lastPlayedTrack = JSON.parse(
 		(await c.env.SPOTIFY_DATA.get('last_played_track')) || 'null',
 	)
-	return c.render(<TopPage lastPlayedTrack={lastPlayedTrack} />)
+	// feature flag
+	const showSpotify = c.env.SHOW_SPOTIFY === 'true'
+	return c.render(
+		<TopPage lastPlayedTrack={showSpotify ? lastPlayedTrack : null} />,
+	)
 })
 
 export default {
