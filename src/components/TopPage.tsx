@@ -2,7 +2,7 @@ import { FC } from 'hono/jsx'
 import { PlayHistoryObject } from '../types/Spotify'
 
 type TopPageProps = {
-	lastPlayedTrack: PlayHistoryObject
+	lastPlayedTrack?: PlayHistoryObject
 }
 
 export const TopPage: FC<TopPageProps> = ({ lastPlayedTrack }) => {
@@ -168,22 +168,18 @@ export const TopPage: FC<TopPageProps> = ({ lastPlayedTrack }) => {
 				</label>
 			</div>
 
-			<div class='absolute bottom-4 right-4 bg-zinc-800 text-white p-4 rounded-lg shadow-lg max-w-sm'>
-				<h3 class='text-lg font-bold mb-2'>最後に再生した曲</h3>
-				{lastPlayedTrack ? (
-					<>
-						<p class='text-sm mb-1'>曲名: {lastPlayedTrack.track.name}</p>
-						<p class='text-sm mb-1'>
-							アーティスト:{' '}
-							{lastPlayedTrack.track.artists
-								.map((artist) => artist.name)
-								.join(', ')}
-						</p>
-					</>
-				) : (
-					<p class='text-sm'>再生履歴がありません</p>
-				)}
-			</div>
+			{lastPlayedTrack && (
+				<div class='absolute bottom-4 right-4 bg-zinc-800 text-white p-4 rounded-lg shadow-lg max-w-sm'>
+					<h3 class='text-lg font-bold mb-2'>最後に再生した曲</h3>
+					<p class='text-sm mb-1'>曲名: {lastPlayedTrack.track.name}</p>
+					<p class='text-sm mb-1'>
+						アーティスト:{' '}
+						{lastPlayedTrack.track.artists
+							.map((artist) => artist.name)
+							.join(', ')}
+					</p>
+				</div>
+			)}
 		</div>
 	)
 }
